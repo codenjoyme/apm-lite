@@ -1,4 +1,4 @@
-import { execFileSync, ExecSyncOptions } from 'child_process';
+﻿import { execFileSync, ExecSyncOptions } from 'child_process';
 import * as fs from 'fs';
 import * as path from 'path';
 
@@ -72,4 +72,20 @@ export function push(repoDir: string, branchName: string): void {
 
 export function getRemoteURL(repoDir: string): string {
   return run(repoDir, 'remote', 'get-url', 'origin');
+}
+
+export interface SkillInfo {
+  description: string;
+  owner: string;
+}
+
+export function loadSkillInfo(repoDir: string, skillName: string): SkillInfo | null {
+  const infoPath = path.join(repoDir, skillName, 'info.json');
+  if (!fs.existsSync(infoPath)) return null;
+  try {
+    const data = fs.readFileSync(infoPath, 'utf8');
+    return JSON.parse(data) as SkillInfo;
+  } catch {
+    return null;
+  }
 }
