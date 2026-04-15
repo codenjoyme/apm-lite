@@ -1,4 +1,4 @@
-﻿# Skills CLI ΓÇö Quick Reference for AI Agents
+# Skills CLI — Quick Reference for AI Agents
 
 ## Commands
 
@@ -7,7 +7,7 @@ skills init --repo <url> --groups <g1>[,<g2>...]   Clone repo, resolve skills, s
 skills init                                         Re-init from existing skills.json
 skills pull                                         Pull latest from remote
 skills push <skill-name>                            Branch + commit + push for review
-skills list                                         List skills (Γ£à active, Γùï inactive)
+skills list                                         List skills (✅ active, ○ inactive)
 skills list --verbose                               Include description and owner
 skills list --json                                  Output as JSON array
 skills create <name>                                Create new skill (SKILL.md + info.json)
@@ -44,14 +44,14 @@ skills help                                         Show general help
 
 ```
 my-project/
-Γö£ΓöÇΓöÇ skills.json              ΓåÉ workspace config
-Γö£ΓöÇΓöÇ instructions/             ΓåÉ cloned skills repo (sparse checkout)
-Γöé   Γö£ΓöÇΓöÇ .manifest/           ΓåÉ manifest files
-Γöé   Γö£ΓöÇΓöÇ skill-name/
-Γöé   Γöé   Γö£ΓöÇΓöÇ SKILL.md         ΓåÉ instructions for AI agent
-Γöé   Γöé   ΓööΓöÇΓöÇ info.json        ΓåÉ metadata (description, owner)
-Γöé   ΓööΓöÇΓöÇ ...
-ΓööΓöÇΓöÇ src/                     ΓåÉ project source code
+├── skills.json              ← workspace config
+├── instructions/             ← cloned skills repo (sparse checkout)
+│   ├── .manifest/           ← manifest files
+│   ├── skill-name/
+│   │   ├── SKILL.md         ← instructions for AI agent
+│   │   └── info.json        ← metadata (description, owner)
+│   └── ...
+└── src/                     ← project source code
 ```
 
 ## Manifest Files (.manifest/)
