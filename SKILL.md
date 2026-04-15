@@ -133,17 +133,17 @@ git --version    # 2.25 or higher
 #### Install from a private Git repository
 
 ```bash
-npm install -g git+https://github.com/your-org/skills-cli.git
+npm install -g git+https://github.com/your-org/scripts.git
 ```
 
 Or via SSH:
 ```bash
-npm install -g git+ssh://git@github.com/your-org/skills-cli.git
+npm install -g git+ssh://git@github.com/your-org/scripts.git
 ```
 
 Or from a local folder (for development/testing):
 ```bash
-npm install -g ./tools2/skills-cli
+npm install -g ./tools2/scripts
 ```
 
 After installation, `skills` is available globally:
@@ -154,7 +154,7 @@ skills help
 #### Uninstall
 
 ```bash
-npm uninstall -g skills-cli
+npm uninstall -g scripts
 ```
 
 #### How it works
