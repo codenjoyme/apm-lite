@@ -1,4 +1,4 @@
-import * as fs from 'fs';
+﻿import * as fs from 'fs';
 
 export const CONFIG_FILE = 'skills.json';
 export const REPO_SUB_DIR = 'instructions';
@@ -7,11 +7,14 @@ export interface Config {
   repo_url: string;
   groups: string[];
   skills: string[];
+  extra_groups?: string[];
+  extra_skills?: string[];
+  excluded_skills?: string[];
 }
 
 export function load(): Config {
   if (!fs.existsSync(CONFIG_FILE)) {
-    throw new Error('not a skills workspace — run `skills init` first');
+    throw new Error('not a skills workspace ΓÇö run `skills init` first');
   }
   try {
     const data = fs.readFileSync(CONFIG_FILE, 'utf8');

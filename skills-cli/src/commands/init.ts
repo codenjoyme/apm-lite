@@ -1,7 +1,8 @@
-import * as fs from 'fs';
+﻿import * as fs from 'fs';
 import * as config from '../lib/config';
 import * as gitops from '../lib/gitops';
 import * as manifest from '../lib/manifest';
+import { resolveEffectiveGroups, applyExtraAndExcluded } from './toggle';
 
 function parseArgs(args: string[]): { repo: string; groups: string[] } {
   if (args.includes('--help') || args.includes('-h')) {
@@ -83,14 +84,16 @@ export function runInit(args: string[]): void {
     }
     console.log('  Γ£ô Cloned');
 
-    console.log(`ΓåÆ Resolving skills for groups: ${existing.groups.join(', ')} ...`);
+    const groups = resolveEffectiveGroups(existing);
+    console.log(`ΓåÆ Resolving skills for groups: ${groups.join(', ')} ...`);
     let skills: string[];
     try {
-      skills = manifest.resolveSkills(repoDir, existing.groups);
+      skills = manifest.resolveSkills(repoDir, groups);
     } catch (err) {
       console.error(`Error: manifest resolution failed: ${err}`);
       process.exit(1);
     }
+    skills = applyExtraAndExcluded(skills, existing);
     console.log(`  Γ£ô Resolved ${skills.length} skill(s): ${skills.join(', ')}`);
 
     console.log('ΓåÆ Applying sparse checkout ...');
@@ -122,16 +125,16 @@ export function runInit(args: string[]): void {
     process.exit(1);
   }
 
-  console.log(`→ Cloning skills repo from ${repo} ...`);
+  console.log(`ΓåÆ Cloning skills repo from ${repo} ...`);
   try {
     gitops.clone(repo, config.REPO_SUB_DIR);
   } catch (err) {
     console.error(`Error: clone failed: ${err}`);
     process.exit(1);
   }
-  console.log('  ✓ Cloned');
+  console.log('  Γ£ô Cloned');
 
-  console.log(`→ Resolving skills for groups: ${groups.join(', ')} ...`);
+  console.log(`ΓåÆ Resolving skills for groups: ${groups.join(', ')} ...`);
   let skills: string[];
   try {
     skills = manifest.resolveSkills(config.REPO_SUB_DIR, groups);
@@ -139,21 +142,21 @@ export function runInit(args: string[]): void {
     console.error(`Error: manifest resolution failed: ${err}`);
     process.exit(1);
   }
-  console.log(`  ✓ Resolved ${skills.length} skill(s): ${skills.join(', ')}`);
+  console.log(`  Γ£ô Resolved ${skills.length} skill(s): ${skills.join(', ')}`);
 
-  console.log('→ Applying sparse checkout ...');
+  console.log('ΓåÆ Applying sparse checkout ...');
   try {
     gitops.setupSparseCheckout(config.REPO_SUB_DIR, skills);
   } catch (err) {
     console.error(`Error: sparse checkout failed: ${err}`);
     process.exit(1);
   }
-  console.log('  ✓ Sparse checkout applied');
+  console.log('  Γ£ô Sparse checkout applied');
 
   const cfg: config.Config = { repo_url: repo, groups, skills };
   config.save(cfg);
 
-  console.log('\n✅ Skills workspace initialized!');
+  console.log('\nΓ£à Skills workspace initialized!');
   console.log(`   Repository: ${repo}`);
   console.log(`   Groups:     ${groups.join(', ')}`);
   console.log(`   Skills:     ${skills.join(', ')}`);
