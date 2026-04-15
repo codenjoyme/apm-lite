@@ -1,4 +1,4 @@
-﻿import * as config from '../lib/config';
+import * as config from '../lib/config';
 
 export function runEnable(args: string[]): void {
   if (args.length === 0 || args[0] === '--help' || args[0] === '-h') {
@@ -51,7 +51,7 @@ function enableGroup(name: string): void {
 
   cfg.extra_groups = [...(cfg.extra_groups ?? []), name];
   config.save(cfg);
-  console.log(`Γ£à Group "${name}" enabled`);
+  console.log(`✅ Group "${name}" enabled`);
   console.log('Run `skills init` to re-apply skill resolution.');
 }
 
@@ -69,7 +69,7 @@ function disableGroup(name: string): void {
   }
 
   config.save(cfg);
-  console.log(`Γ£à Group "${name}" disabled`);
+  console.log(`✅ Group "${name}" disabled`);
   console.log('Run `skills init` to re-apply skill resolution.');
 }
 
@@ -82,7 +82,7 @@ function enableSkill(name: string): void {
   if (excluded.includes(name)) {
     cfg.excluded_skills = excluded.filter(s => s !== name);
     config.save(cfg);
-    console.log(`Γ£à Skill "${name}" re-enabled (removed from exclusion list)`);
+    console.log(`✅ Skill "${name}" re-enabled (removed from exclusion list)`);
     console.log('Run `skills init` to re-apply skill resolution.');
     return;
   }
@@ -94,7 +94,7 @@ function enableSkill(name: string): void {
 
   cfg.extra_skills = [...(cfg.extra_skills ?? []), name];
   config.save(cfg);
-  console.log(`Γ£à Skill "${name}" enabled`);
+  console.log(`✅ Skill "${name}" enabled`);
   console.log('Run `skills init` to re-apply skill resolution.');
 }
 
@@ -112,7 +112,7 @@ function disableSkill(name: string): void {
 
   cfg.excluded_skills = [...(cfg.excluded_skills ?? []), name];
   config.save(cfg);
-  console.log(`Γ£à Skill "${name}" disabled`);
+  console.log(`✅ Skill "${name}" disabled`);
   console.log('Run `skills init` to re-apply skill resolution.');
 }
 

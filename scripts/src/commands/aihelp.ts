@@ -1,4 +1,4 @@
-﻿import * as fs from 'fs';
+import * as fs from 'fs';
 import * as path from 'path';
 
 export function runAIHelp(): void {
@@ -19,7 +19,7 @@ export function runAIHelp(): void {
   console.log(FALLBACK);
 }
 
-const FALLBACK = `# Skills CLI ΓÇö Quick Reference for AI Agents
+const FALLBACK = `# Skills CLI — Quick Reference for AI Agents
 
 ## Commands
 

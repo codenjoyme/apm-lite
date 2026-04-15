@@ -1,4 +1,4 @@
-﻿import * as config from '../lib/config';
+import * as config from '../lib/config';
 import * as gitops from '../lib/gitops';
 
 export function runList(args: string[]): void {
@@ -12,7 +12,7 @@ Flags:
   --verbose  Show description and owner from info.json
   --json     Output skills as JSON array
 
-Active skills (checked out in this workspace) are marked with Γ£à.
+Active skills (checked out in this workspace) are marked with ✅.
 Other skills exist in the repo but are not part of your current groups.
 
 `);
@@ -63,10 +63,10 @@ Other skills exist in the repo but are not part of your current groups.
   let activeCount = 0;
   for (const s of allSkills) {
     if (activeSet.has(s)) {
-      console.log(`  Γ£à ${s}`);
+      console.log(`  ✅ ${s}`);
       activeCount++;
     } else {
-      console.log(`  Γùï  ${s}`);
+      console.log(`  ○  ${s}`);
     }
     if (verbose) {
       const info = gitops.loadSkillInfo(repoDir, s);

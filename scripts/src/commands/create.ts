@@ -27,8 +27,8 @@ Usage:
   skills create <skill-name>
 
 Creates:
-  instructions/<skill-name>/SKILL.md   ΓÇö skill instructions template
-  instructions/<skill-name>/info.json  ΓÇö skill metadata (description, owner)
+  instructions/<skill-name>/SKILL.md   — skill instructions template
+  instructions/<skill-name>/info.json  — skill metadata (description, owner)
 
 `);
     return;
@@ -70,8 +70,8 @@ Creates:
   const infoPath = path.join(skillDir, 'info.json');
   fs.writeFileSync(infoPath, INFO_TEMPLATE, 'utf8');
 
-  console.log(`Γ£à Skill "${skillName}" created at ${skillDir}`);
-  console.log(`   ΓåÆ ${skillPath}`);
-  console.log(`   ΓåÆ ${infoPath}`);
+  console.log(`✅ Skill "${skillName}" created at ${skillDir}`);
+  console.log(`   → ${skillPath}`);
+  console.log(`   → ${infoPath}`);
   console.log('\nEdit SKILL.md with your instructions, then use `skills push` to propose it.');
 }

@@ -1,4 +1,4 @@
-﻿import * as fs from 'fs';
+import * as fs from 'fs';
 import * as config from '../lib/config';
 import * as gitops from '../lib/gitops';
 import * as manifest from '../lib/manifest';
@@ -67,25 +67,25 @@ export function runInit(args: string[]): void {
       process.exit(1);
     }
 
-    console.log('ΓåÆ Re-initializing from existing skills.json ...');
+    console.log('→ Re-initializing from existing skills.json ...');
     const repoDir = config.REPO_SUB_DIR;
     // Remove old clone if present
     if (fs.existsSync(repoDir)) {
-      console.log('ΓåÆ Removing old instructions/ ...');
+      console.log('→ Removing old instructions/ ...');
       fs.rmSync(repoDir, { recursive: true, force: true });
     }
 
-    console.log(`ΓåÆ Cloning skills repo from ${existing.repo_url} ...`);
+    console.log(`→ Cloning skills repo from ${existing.repo_url} ...`);
     try {
       gitops.clone(existing.repo_url, repoDir);
     } catch (err) {
       console.error(`Error: clone failed: ${err}`);
       process.exit(1);
     }
-    console.log('  Γ£ô Cloned');
+    console.log('  ✓ Cloned');
 
     const groups = resolveEffectiveGroups(existing);
-    console.log(`ΓåÆ Resolving skills for groups: ${groups.join(', ')} ...`);
+    console.log(`→ Resolving skills for groups: ${groups.join(', ')} ...`);
     let skills: string[];
     try {
       skills = manifest.resolveSkills(repoDir, groups);
@@ -94,20 +94,20 @@ export function runInit(args: string[]): void {
       process.exit(1);
     }
     skills = applyExtraAndExcluded(skills, existing);
-    console.log(`  Γ£ô Resolved ${skills.length} skill(s): ${skills.join(', ')}`);
+    console.log(`  ✓ Resolved ${skills.length} skill(s): ${skills.join(', ')}`);
 
-    console.log('ΓåÆ Applying sparse checkout ...');
+    console.log('→ Applying sparse checkout ...');
     try {
       gitops.setupSparseCheckout(repoDir, skills);
     } catch (err) {
       console.error(`Error: sparse checkout failed: ${err}`);
       process.exit(1);
     }
-    console.log('  Γ£ô Sparse checkout applied');
+    console.log('  ✓ Sparse checkout applied');
 
     existing.skills = skills;
     config.save(existing);
-    console.log('\nΓ£à Skills workspace re-initialized!');
+    console.log('\n✅ Skills workspace re-initialized!');
     console.log(`   Skills:     ${skills.join(', ')}`);
     return;
   }
@@ -125,16 +125,16 @@ export function runInit(args: string[]): void {
     process.exit(1);
   }
 
-  console.log(`ΓåÆ Cloning skills repo from ${repo} ...`);
+  console.log(`→ Cloning skills repo from ${repo} ...`);
   try {
     gitops.clone(repo, config.REPO_SUB_DIR);
   } catch (err) {
     console.error(`Error: clone failed: ${err}`);
     process.exit(1);
   }
-  console.log('  Γ£ô Cloned');
+  console.log('  ✓ Cloned');
 
-  console.log(`ΓåÆ Resolving skills for groups: ${groups.join(', ')} ...`);
+  console.log(`→ Resolving skills for groups: ${groups.join(', ')} ...`);
   let skills: string[];
   try {
     skills = manifest.resolveSkills(config.REPO_SUB_DIR, groups);
@@ -142,21 +142,21 @@ export function runInit(args: string[]): void {
     console.error(`Error: manifest resolution failed: ${err}`);
     process.exit(1);
   }
-  console.log(`  Γ£ô Resolved ${skills.length} skill(s): ${skills.join(', ')}`);
+  console.log(`  ✓ Resolved ${skills.length} skill(s): ${skills.join(', ')}`);
 
-  console.log('ΓåÆ Applying sparse checkout ...');
+  console.log('→ Applying sparse checkout ...');
   try {
     gitops.setupSparseCheckout(config.REPO_SUB_DIR, skills);
   } catch (err) {
     console.error(`Error: sparse checkout failed: ${err}`);
     process.exit(1);
   }
-  console.log('  Γ£ô Sparse checkout applied');
+  console.log('  ✓ Sparse checkout applied');
 
   const cfg: config.Config = { repo_url: repo, groups, skills };
   config.save(cfg);
 
-  console.log('\nΓ£à Skills workspace initialized!');
+  console.log('\n✅ Skills workspace initialized!');
   console.log(`   Repository: ${repo}`);
   console.log(`   Groups:     ${groups.join(', ')}`);
   console.log(`   Skills:     ${skills.join(', ')}`);

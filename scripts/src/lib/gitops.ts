@@ -1,4 +1,4 @@
-﻿import { execFileSync, ExecSyncOptions } from 'child_process';
+import { execFileSync, ExecSyncOptions } from 'child_process';
 import * as fs from 'fs';
 import * as path from 'path';
 

@@ -1,4 +1,4 @@
-﻿import { runInit } from './init';
+import { runInit } from './init';
 import { runPull } from './pull';
 import { runPush } from './push';
 import { runList } from './list';

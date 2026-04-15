@@ -1,4 +1,4 @@
-﻿import * as fs from 'fs';
+import * as fs from 'fs';
 import * as path from 'path';
 
 export function runInitRepo(args: string[]): void {
@@ -21,7 +21,7 @@ export function runInitRepo(args: string[]): void {
     process.exit(1);
   }
 
-  console.log(`ΓåÆ Creating skills repository at ${folderName} ...`);
+  console.log(`→ Creating skills repository at ${folderName} ...`);
 
   // Create directory structure
   const dirs = [
@@ -54,8 +54,8 @@ export function runInitRepo(args: string[]): void {
   // Write .gitignore
   writeFile(path.join(folderName, '.gitignore'), '# Skills repo .gitignore\n');
 
-  console.log('  Γ£ô Files created');
-  console.log(`\nΓ£à Skills repository initialized at ${folderName}`);
+  console.log('  ✓ Files created');
+  console.log(`\n✅ Skills repository initialized at ${folderName}`);
   console.log('\nNext steps:');
   console.log(`  cd ${folderName}`);
   console.log('  git init && git add . && git commit -m "init: skills repository"');
@@ -70,12 +70,12 @@ function printInitRepoHelp(): void {
   console.log(`Initialize a new skills repository with base structure.
 
 Creates a folder with:
-  .manifest/_global.json      ΓÇö global skills config
-  .manifest/group-1.json      ΓÇö example group config
-  .manifest/sub-group.json    ΓÇö example sub-config
-  creating-instructions/      ΓÇö skill: how to create AI instructions
-  iterative-prompting/        ΓÇö skill: iterative prompt workflow
-  skills-cli/                 ΓÇö skill: how to use this CLI tool
+  .manifest/_global.json      — global skills config
+  .manifest/group-1.json      — example group config
+  .manifest/sub-group.json    — example sub-config
+  creating-instructions/      — skill: how to create AI instructions
+  iterative-prompting/        — skill: iterative prompt workflow
+  skills-cli/                 — skill: how to use this CLI tool
 
 Usage:
   skills init-repo <folder-name>
@@ -115,10 +115,10 @@ Guidelines for creating, organizing, and maintaining AI instruction files using 
 
 ## Key Principles
 
-- Instructions are pure markdown files describing SDLC workflows ΓÇö no platform-specific adapters.
+- Instructions are pure markdown files describing SDLC workflows — no platform-specific adapters.
 - One SDLC workflow per file (Single Responsibility Principle).
-- Soft limit: ~700 lines per file. Exceeding ΓåÆ split.
-- Complex instructions reference other instructions ΓÇö composability over monoliths.
+- Soft limit: ~700 lines per file. Exceeding → split.
+- Complex instructions reference other instructions — composability over monoliths.
 
 ## Structure
 
@@ -160,16 +160,16 @@ A workflow pattern where you maintain a living file (\`main.prompt.md\`) instead
 2. Add \`## UPD1\` with your task description.
 3. AI reads the file, implements changes.
 4. AI appends \`### RESULT\` with changelog.
-5. Add \`## UPD2\` with next request ΓÇö repeat.
+5. Add \`## UPD2\` with next request — repeat.
 
 ## Key Insight
 
-A committed prompt file + \`git diff\` gives the AI precise context about what changed ΓÇö no hallucination, no drift, no lost history.
+A committed prompt file + \`git diff\` gives the AI precise context about what changed — no hallucination, no drift, no lost history.
 
 ## Rules
 
 - Always check \`git diff\` first to see what changed.
-- All existing content stays intact ΓÇö prior corrections are done.
+- All existing content stays intact — prior corrections are done.
 - \`### RESULT\` is concise: file paths + 1-2 sentence description.
 `;
 
@@ -214,11 +214,11 @@ skills help                                         Show help
 
 ## Typical Workflow
 
-1. \`skills init --repo <url> --groups <group>\` ΓÇö set up workspace
-2. \`skills list --verbose\` ΓÇö see what's available
+1. \`skills init --repo <url> --groups <group>\` — set up workspace
+2. \`skills list --verbose\` — see what's available
 3. Edit \`instructions/<skill>/SKILL.md\`
-4. \`skills push <skill>\` ΓÇö propose changes via PR
-5. \`skills pull\` ΓÇö get latest updates
+4. \`skills push <skill>\` — propose changes via PR
+5. \`skills pull\` — get latest updates
 `;
 
 const SKILLS_CLI_INFO = `{
