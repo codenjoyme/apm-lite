@@ -80,10 +80,19 @@ export interface SkillInfo {
 }
 
 export function loadSkillInfo(repoDir: string, skillName: string): SkillInfo | null {
+  // Try local filesystem first (works for active/checked-out skills)
   const infoPath = path.join(repoDir, skillName, 'info.json');
-  if (!fs.existsSync(infoPath)) return null;
+  if (fs.existsSync(infoPath)) {
+    try {
+      const data = fs.readFileSync(infoPath, 'utf8');
+      return JSON.parse(data) as SkillInfo;
+    } catch {
+      // fall through to git
+    }
+  }
+  // Fall back to reading from git object database (works for non-checked-out skills)
   try {
-    const data = fs.readFileSync(infoPath, 'utf8');
+    const data = run(repoDir, 'show', `HEAD:${skillName}/info.json`);
     return JSON.parse(data) as SkillInfo;
   } catch {
     return null;
