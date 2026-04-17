@@ -1,56 +1,56 @@
 # Skills CLI — Smoke Test Framework
 
-## Идея
+## Concept
 
-Smoke-тест запускается в Docker-контейнере (чистый Linux),
-выполняет **все** команды CLI с нуля и записывает лог
-`command → output` в файл на хостовой машине.
+The smoke test runs inside a Docker container (clean Linux),
+executes **all** CLI commands from scratch, and writes a log
+(`command → output`) to a file on the host machine.
 
-После запуска ты видишь `git diff test/test-log.txt`:
-- **diff пустой** → всё как было, можно коммитить.
-- **diff есть** → смотришь что изменилось, разбираешься, фиксишь.
+After the run you check `git diff test/test-log.txt`:
+- **diff is empty** → nothing changed, safe to commit.
+- **diff exists** → inspect what changed, investigate, fix.
 
-Лог коммитится в репозиторий — это «золотой снимок» поведения CLI.
+The log is committed to the repository — it serves as a "golden snapshot" of CLI behavior.
 
 ---
 
-## Структура
+## Structure
 
 ```
 test/
-├── README.md          ← ты тут
-├── commands.txt       ← список команд для smoke-теста (по одной на строку)
-├── run-tests.sh       ← bash-раннер: выполняет команды, пишет лог
-├── Dockerfile         ← чистый Linux-контейнер с Node.js + git
-└── test-log.txt       ← результат последнего прогона (коммитится)
+├── README.md          ← you are here
+├── commands.txt       ← list of smoke-test commands (one per line)
+├── run-tests.sh       ← bash runner: executes commands, writes the log
+├── Dockerfile         ← clean Linux container with Node.js + git
+└── test-log.txt       ← result of the last run (committed to repo)
 ```
 
 ---
 
-## Быстрый старт
+## Quick Start
 
-### 1. Собрать образ
+### 1. Build the image
 
 ```bash
 cd apm-lite
 docker build -t skills-smoke -f test/Dockerfile .
 ```
 
-### 2. Запустить тест
+### 2. Run the test
 
 ```bash
 docker run --rm -v ./test:/app/test skills-smoke
 ```
 
-Лог появится в `test/test-log.txt` на хостовой машине.
+The log will appear at `test/test-log.txt` on the host machine.
 
-### 3. Посмотреть результат
+### 3. Check the result
 
 ```bash
 git diff test/test-log.txt
 ```
 
-Если всё ок:
+If everything is fine:
 
 ```bash
 git add test/test-log.txt
@@ -59,45 +59,45 @@ git commit -m "smoke: update golden log"
 
 ---
 
-## Как работает
+## How It Works
 
-1. **`commands.txt`** — плоский список команд.
-   Комментарии (`# ...`) и пустые строки пропускаются.
-   `cd` команды меняют рабочую директорию для последующих команд.
+1. **`commands.txt`** — flat list of commands.
+   Comments (`# ...`) and empty lines are skipped.
+   `cd` commands change the working directory for subsequent commands.
 
-2. **`run-tests.sh`** — читает `commands.txt` построчно:
-   - выполняет команду;
-   - записывает в лог: `$ <команда>`, stdout+stderr, `[exit: N] OK|FAIL`;
-   - в конце пишет summary (passed / failed / total).
+2. **`run-tests.sh`** — reads `commands.txt` line by line:
+   - executes the command;
+   - writes to the log: `$ <command>`, stdout+stderr, `[exit: N] OK|FAIL`;
+   - prints a summary at the end (passed / failed / total).
 
-3. **`Dockerfile`** — образ `node:20-slim` + git.
-   Копирует исходники, собирает CLI, запускает `run-tests.sh`.
-   Директория `test/` монтируется как volume — лог пишется прямо на хост.
+3. **`Dockerfile`** — `node:20-slim` image + git.
+   Copies the source, builds the CLI, runs `run-tests.sh`.
+   The `test/` directory is mounted as a volume — the log is written directly to the host.
 
 ---
 
-## Как добавить новый тест
+## Adding a New Test
 
-Просто добавь команду в `commands.txt`:
+Just add a command to `commands.txt`:
 
 ```
 skills create my-new-skill
 skills list
 ```
 
-Запусти контейнер, проверь diff, закоммить новый лог.
+Run the container, check the diff, commit the new log.
 
 ---
 
 ## FAQ
 
-**Q: Зачем Docker?**
-A: Чистое окружение. Никаких артефактов от предыдущих запусков,
-никаких зависимостей от хостовой ОС.
+**Q: Why Docker?**
+A: Clean environment. No artifacts from previous runs,
+no dependencies on the host OS.
 
-**Q: Можно запустить без Docker?**
-A: Да, но на Linux. Просто `bash test/run-tests.sh`.
-Убедись что `node`, `npm`, `git` установлены и CLI собран.
+**Q: Can I run without Docker?**
+A: Yes, but on Linux. Just run `bash test/run-tests.sh`.
+Make sure `node`, `npm`, and `git` are installed and the CLI is built.
 
-**Q: Тест упал, что делать?**
-A: Открой `test/test-log.txt`, найди `[FAIL]`, посмотри вывод команды.
+**Q: The test failed, what do I do?**
+A: Open `test/test-log.txt`, search for `[FAIL]`, check the command output.
