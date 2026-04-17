@@ -101,6 +101,36 @@ Run the container, check the diff, commit.
 
 ---
 
+## Shortcuts
+
+Build + run in one line:
+
+```bash
+docker build -t skills-smoke -f test/Dockerfile . && docker run --rm -v ./test:/app/test skills-smoke
+```
+
+Build + run + diff:
+
+```bash
+docker build -t skills-smoke -f test/Dockerfile . && docker run --rm -v ./test:/app/test skills-smoke && git diff test/commands.md
+```
+
+Build + run + commit if OK:
+
+```bash
+docker build -t skills-smoke -f test/Dockerfile . && docker run --rm -v ./test:/app/test skills-smoke && git add test/commands.md && git commit -m "smoke: update golden snapshot"
+```
+
+PowerShell (Windows):
+
+```powershell
+docker build -t skills-smoke -f test/Dockerfile .
+docker run --rm -v "${PWD}/test:/app/test" skills-smoke
+git diff test/commands.md
+```
+
+---
+
 ## FAQ
 
 **Q: Why Docker?**
@@ -114,3 +144,12 @@ Make sure `node`, `npm`, and `git` are installed and the CLI is built.
 **Q: How do I validate results?**
 A: `git diff test/commands.md`. You (or an LLM) review the diff.
 If it looks correct, commit. If not, investigate and fix.
+
+**Q: Output has git hashes and timestamps — won't the diff always change?**
+A: Yes, git hashes and timing values change every run.
+That's expected — just verify the structure and behavior are correct, then commit the new snapshot.
+
+**Q: How does re-run work?**
+A: The runner replaces old `` ``` `` output blocks in-place. Descriptions,
+headings, and command lines stay untouched. Only the content between
+fences gets overwritten.
