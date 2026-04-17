@@ -2,111 +2,81 @@
 # ============================================
 # Skills CLI — Smoke Test Runner
 # ============================================
-# Reads commands from commands.txt, executes each one,
-# and writes command + output to a log file on the host.
+# Reads commands.md, executes lines matching > `command`,
+# inserts output as fenced code blocks, writes result
+# back to the same file.
 # ============================================
 
 set -o pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
-COMMANDS_FILE="${SCRIPT_DIR}/commands.txt"
-LOG_FILE="${SCRIPT_DIR}/test-log.txt"
+FILE="${SCRIPT_DIR}/commands.md"
 
-# Allow override via env
-: "${COMMANDS_FILE:=${SCRIPT_DIR}/commands.txt}"
-: "${LOG_FILE:=${SCRIPT_DIR}/test-log.txt}"
-
-# Current working directory tracker
 CURRENT_DIR="/workspace"
+TMPFILE="${FILE}.tmp"
 
-# ---- helpers ----
-separator() {
-    echo "────────────────────────────────────────────────────────" >> "$LOG_FILE"
-}
+: > "$TMPFILE"
 
-timestamp() {
-    date '+%Y-%m-%d %H:%M:%S'
-}
-
-# ---- main ----
-echo "" > "$LOG_FILE"
-echo "SMOKE TEST LOG — $(timestamp)" >> "$LOG_FILE"
-echo "Node: $(node --version 2>/dev/null || echo 'not found')" >> "$LOG_FILE"
-echo "npm:  $(npm --version 2>/dev/null || echo 'not found')" >> "$LOG_FILE"
-echo "git:  $(git --version 2>/dev/null || echo 'not found')" >> "$LOG_FILE"
-separator
-
-PASS=0
-FAIL=0
+IN_OUTPUT_BLOCK=false
+AFTER_COMMAND=false
 
 while IFS= read -r line || [[ -n "$line" ]]; do
-    # Skip comments and empty lines
-    [[ -z "$line" ]] && continue
-    [[ "$line" =~ ^[[:space:]]*# ]] && continue
+    # Strip Windows CR
+    line="${line//$'\r'/}"
 
-    # Handle cd commands — update tracked directory
-    if [[ "$line" =~ ^cd[[:space:]]+(.*) ]]; then
-        TARGET="${BASH_REMATCH[1]}"
-        echo "" >> "$LOG_FILE"
-        separator
-        echo "\$ cd ${TARGET}" >> "$LOG_FILE"
-
-        # Resolve relative path against current dir
-        if [[ "$TARGET" = /* ]]; then
-            CURRENT_DIR="$TARGET"
-        else
-            CURRENT_DIR="$(cd "$CURRENT_DIR" 2>/dev/null && cd "$TARGET" 2>/dev/null && pwd)"
+    # Skip old output blocks (``` that follow a command)
+    if $IN_OUTPUT_BLOCK; then
+        if [[ "$line" == '```' ]]; then
+            IN_OUTPUT_BLOCK=false
         fi
-
-        if [[ -d "$CURRENT_DIR" ]]; then
-            echo "[OK] now in ${CURRENT_DIR}" >> "$LOG_FILE"
-            PASS=$((PASS + 1))
-        else
-            echo "[FAIL] directory does not exist: ${TARGET}" >> "$LOG_FILE"
-            FAIL=$((FAIL + 1))
-        fi
-        separator
         continue
     fi
 
-    # Execute the command
-    echo "" >> "$LOG_FILE"
-    separator
-    echo "\$ ${line}" >> "$LOG_FILE"
-    separator
-
-    OUTPUT=$(cd "$CURRENT_DIR" 2>/dev/null && eval "$line" 2>&1)
-    EXIT_CODE=$?
-
-    if [[ -n "$OUTPUT" ]]; then
-        echo "$OUTPUT" >> "$LOG_FILE"
+    # Detect start of old output block
+    if $AFTER_COMMAND && [[ "$line" == '```' ]]; then
+        IN_OUTPUT_BLOCK=true
+        continue
     fi
 
-    if [[ $EXIT_CODE -eq 0 ]]; then
-        echo "[exit: ${EXIT_CODE}] OK" >> "$LOG_FILE"
-        PASS=$((PASS + 1))
+    # Check if this line is a command: > `...`
+    if [[ "$line" =~ ^\>[[:space:]]*\`(.+)\`$ ]]; then
+        CMD="${BASH_REMATCH[1]}"
+        AFTER_COMMAND=true
+
+        # Write the command line
+        echo "$line" >> "$TMPFILE"
+
+        # Handle cd
+        if [[ "$CMD" =~ ^cd[[:space:]]+(.*) ]]; then
+            TARGET="${BASH_REMATCH[1]}"
+            if [[ "$TARGET" = /* ]]; then
+                CURRENT_DIR="$TARGET"
+            else
+                RESOLVED="$(cd "$CURRENT_DIR" 2>/dev/null && cd "$TARGET" 2>/dev/null && pwd)"
+                if [[ -n "$RESOLVED" ]]; then
+                    CURRENT_DIR="$RESOLVED"
+                fi
+            fi
+            echo '```' >> "$TMPFILE"
+            echo "$CURRENT_DIR" >> "$TMPFILE"
+            echo '```' >> "$TMPFILE"
+            continue
+        fi
+
+        # Execute command
+        OUTPUT=$(cd "$CURRENT_DIR" 2>/dev/null && eval "$CMD" 2>&1) || true
+
+        echo '```' >> "$TMPFILE"
+        if [[ -n "$OUTPUT" ]]; then
+            echo "$OUTPUT" >> "$TMPFILE"
+        fi
+        echo '```' >> "$TMPFILE"
     else
-        echo "[exit: ${EXIT_CODE}] FAIL" >> "$LOG_FILE"
-        FAIL=$((FAIL + 1))
+        AFTER_COMMAND=false
+        echo "$line" >> "$TMPFILE"
     fi
 
-    separator
+done < "$FILE"
 
-done < "$COMMANDS_FILE"
-
-# ---- summary ----
-echo "" >> "$LOG_FILE"
-separator
-echo "SUMMARY — $(timestamp)" >> "$LOG_FILE"
-echo "  Passed: ${PASS}" >> "$LOG_FILE"
-echo "  Failed: ${FAIL}" >> "$LOG_FILE"
-echo "  Total:  $((PASS + FAIL))" >> "$LOG_FILE"
-separator
-
-echo ""
-echo "=== Smoke test finished ==="
-echo "  Passed: ${PASS}"
-echo "  Failed: ${FAIL}"
-echo "  Log:    ${LOG_FILE}"
-
-exit $FAIL
+mv "$TMPFILE" "$FILE"
+echo "Done. Results written to ${FILE}"

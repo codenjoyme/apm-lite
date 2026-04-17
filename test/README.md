@@ -3,14 +3,14 @@
 ## Concept
 
 The smoke test runs inside a Docker container (clean Linux),
-executes **all** CLI commands from scratch, and writes a log
-(`command → output`) to a file on the host machine.
+executes **all** CLI commands from scratch, and writes the output
+back into the same `commands.md` file — right under each command.
 
-After the run you check `git diff test/test-log.txt`:
-- **diff is empty** → nothing changed, safe to commit.
-- **diff exists** → inspect what changed, investigate, fix.
+After the run you check `git diff test/commands.md`:
+- **diff is empty** → nothing changed, behavior is stable.
+- **diff exists** → inspect what changed, fix or commit.
 
-The log is committed to the repository — it serves as a "golden snapshot" of CLI behavior.
+The file is committed to the repository — it serves as a "golden snapshot" of CLI behavior.
 
 ---
 
@@ -19,10 +19,9 @@ The log is committed to the repository — it serves as a "golden snapshot" of C
 ```
 test/
 ├── README.md          ← you are here
-├── commands.txt       ← list of smoke-test commands (one per line)
-├── run-tests.sh       ← bash runner: executes commands, writes the log
-├── Dockerfile         ← clean Linux container with Node.js + git
-└── test-log.txt       ← result of the last run (committed to repo)
+├── commands.md        ← commands + output (source AND result)
+├── run-tests.sh       ← bash runner: executes commands, writes output back
+└── Dockerfile         ← clean Linux container with Node.js + git
 ```
 
 ---
@@ -42,50 +41,63 @@ docker build -t skills-smoke -f test/Dockerfile .
 docker run --rm -v ./test:/app/test skills-smoke
 ```
 
-The log will appear at `test/test-log.txt` on the host machine.
+Output is written directly into `test/commands.md`.
 
 ### 3. Check the result
 
 ```bash
-git diff test/test-log.txt
+git diff test/commands.md
 ```
 
 If everything is fine:
 
 ```bash
-git add test/test-log.txt
-git commit -m "smoke: update golden log"
+git add test/commands.md
+git commit -m "smoke: update golden snapshot"
 ```
 
 ---
 
 ## How It Works
 
-1. **`commands.txt`** — flat list of commands.
-   Comments (`# ...`) and empty lines are skipped.
-   `cd` commands change the working directory for subsequent commands.
+`commands.md` is a Markdown file with this format:
 
-2. **`run-tests.sh`** — reads `commands.txt` line by line:
-   - executes the command;
-   - writes to the log: `$ <command>`, stdout+stderr, `[exit: N] OK|FAIL`;
-   - prints a summary at the end (passed / failed / total).
+```markdown
+Some description of what we're doing
 
-3. **`Dockerfile`** — `node:20-slim` image + git.
-   Copies the source, builds the CLI, runs `run-tests.sh`.
-   The `test/` directory is mounted as a volume — the log is written directly to the host.
+> `skills init --repo ../project-repo --groups group-1`
+\```
+output appears here after running
+\```
+
+> `skills list`
+\```
+output appears here
+\```
+
+More description text (ignored by the runner)
+```
+
+The runner (`run-tests.sh`):
+1. Reads `commands.md` line by line
+2. Lines matching `` > `command` `` are extracted and executed
+3. Output (stdout + stderr) is inserted as a fenced code block after each command
+4. Old output blocks are replaced on re-run
+5. All other text (headings, descriptions) is passed through unchanged
+6. `cd` commands update the working directory for subsequent commands
 
 ---
 
 ## Adding a New Test
 
-Just add a command to `commands.txt`:
+Just add a command line to `commands.md`:
 
-```
-skills create my-new-skill
-skills list
+```markdown
+> `skills create my-new-skill`
+> `skills list`
 ```
 
-Run the container, check the diff, commit the new log.
+Run the container, check the diff, commit.
 
 ---
 
@@ -99,5 +111,6 @@ no dependencies on the host OS.
 A: Yes, but on Linux. Just run `bash test/run-tests.sh`.
 Make sure `node`, `npm`, and `git` are installed and the CLI is built.
 
-**Q: The test failed, what do I do?**
-A: Open `test/test-log.txt`, search for `[FAIL]`, check the command output.
+**Q: How do I validate results?**
+A: `git diff test/commands.md`. You (or an LLM) review the diff.
+If it looks correct, commit. If not, investigate and fix.

@@ -18,6 +18,5 @@ COPY test/ /app/test/
 # Prepare workspace directories
 RUN mkdir -p /workspace
 
-# The log file will be written to /app/test/test-log.txt
-# Mount this directory as a volume to persist the log on host
+# Mount test/ as a volume — commands.md is read and rewritten in-place
 ENTRYPOINT ["bash", "/app/test/run-tests.sh"]
