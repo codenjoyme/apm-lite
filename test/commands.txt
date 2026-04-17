@@ -1,0 +1,67 @@
+# ============================================
+# Skills CLI — Smoke Test Commands
+# ============================================
+# Each line is a command to execute.
+# Lines starting with # are comments (skipped).
+# Empty lines are skipped.
+# ============================================
+
+# --- Cleanup ---
+npm uninstall -g skills-cli
+rm -rf /workspace/skills-repo
+rm -rf /workspace/project-repo
+
+# --- Install CLI from source ---
+npm install -g --install-links /app
+
+# --- Verify installation ---
+skills help
+skills ai-help
+
+# --- Create skills repository ---
+mkdir -p /workspace/skills-repo
+cd /workspace/skills-repo
+skills init-repo ../project-repo
+
+# --- Initialize git in the skills repo ---
+cd /workspace/project-repo
+git init
+git add .
+git commit -m "Initial commit"
+
+# --- Go back to workspace ---
+cd /workspace/skills-repo
+
+# --- Create skills ---
+skills create my-first-skill
+skills create my-second-skill
+
+# --- Init workspace with local repo ---
+skills init --repo ../project-repo
+
+# --- List skills (should show created skills) ---
+skills list
+skills list --verbose
+skills list --json
+
+# --- Pull latest ---
+skills pull
+
+# --- Enable/disable skills ---
+skills enable my-first-skill
+skills list
+skills disable my-first-skill
+skills list
+skills enable my-first-skill
+
+# --- Enable/disable group ---
+skills enable group backend
+skills list
+skills disable group backend
+skills list
+
+# --- Push a skill (creates branch + commit) ---
+skills push my-first-skill
+
+# --- Final list ---
+skills list --verbose
