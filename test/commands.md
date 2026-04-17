@@ -5,7 +5,7 @@
 > `npm uninstall -g skills-cli`
 ```
 
-up to date in 386ms
+up to date in 482ms
 ```
 > `rm -rf /workspace/skills-repo`
 ```
@@ -16,7 +16,7 @@ up to date in 386ms
 > `npm install -g --install-links /app`
 ```
 
-added 1 package in 356ms
+added 1 package in 426ms
 ```
 > `command -v skills`
 ```
@@ -370,7 +370,7 @@ Initialized empty Git repository in /workspace/project-repo/.git/
 ```
 > `git commit -m "Initial commit"`
 ```
-[master (root-commit) 211f88d] Initial commit
+[master (root-commit) f3d5bea] Initial commit
  6 files changed, 21 insertions(+)
  create mode 100644 .gitignore
  create mode 100644 .manifest/_global.json
@@ -381,7 +381,7 @@ Initialized empty Git repository in /workspace/project-repo/.git/
 ```
 > `git log --oneline`
 ```
-211f88d Initial commit
+f3d5bea Initial commit
 ```
 > `git branch --list`
 ```
@@ -714,31 +714,14 @@ Disable again, then try double disable:
 
 > `skills disable alpha-skill --force`
 ```
-error: pathspec ':(,prefix:0)alpha-skill/' did not match any file(s) known to git
-Did you forget to 'git add'?
-/usr/local/lib/node_modules/skills-cli/dist/lib/gitops.js:63
-        throw new Error(`git ${args.join(' ')}: ${msg}`);
-        ^
-
-Error: git stash push -m skills-cli: auto-stash for alpha-skill -- alpha-skill/: error: pathspec ':(,prefix:0)alpha-skill/' did not match any file(s) known to git
-Did you forget to 'git add'?
-    at run (/usr/local/lib/node_modules/skills-cli/dist/lib/gitops.js:63:15)
-    at Object.stashSkillChanges (/usr/local/lib/node_modules/skills-cli/dist/lib/gitops.js:169:5)
-    at disableSkill (/usr/local/lib/node_modules/skills-cli/dist/commands/toggle.js:180:16)
-    at runDisable (/usr/local/lib/node_modules/skills-cli/dist/commands/toggle.js:76:9)
-    at execute (/usr/local/lib/node_modules/skills-cli/dist/commands/root.js:38:37)
-    at Object.<anonymous> (/usr/local/lib/node_modules/skills-cli/dist/index.js:5:20)
-    at Module._compile (node:internal/modules/cjs/loader:1521:14)
-    at Module._extensions..js (node:internal/modules/cjs/loader:1623:10)
-    at Module.load (node:internal/modules/cjs/loader:1266:32)
-    at Module._load (node:internal/modules/cjs/loader:1091:12)
-
-Node.js v20.20.2
+  ⚠ Stashed uncommitted changes for "alpha-skill" (use `git stash list` to review)
+✅ Skill "alpha-skill" disabled
+→ Applying sparse checkout (3 skill(s)) ...
+  ✓ Sparse checkout applied
 ```
 > `skills disable alpha-skill`
 ```
-Error: cannot disable skill "alpha-skill" - uncommitted local changes detected
-Commit or discard your changes first, or use --force to override.
+Skill "alpha-skill" is already disabled
 ```
 > `cat skills.json`
 ```
@@ -748,11 +731,12 @@ Commit or discard your changes first, or use --force to override.
     "group-1"
   ],
   "extra_skills": [
-    "alpha-skill",
     "beta-skill",
     "gamma-skill"
   ],
-  "excluded_skills": []
+  "excluded_skills": [
+    "alpha-skill"
+  ]
 }
 ```
 
@@ -770,11 +754,12 @@ Group "group-1" is already enabled
     "group-1"
   ],
   "extra_skills": [
-    "alpha-skill",
     "beta-skill",
     "gamma-skill"
   ],
-  "excluded_skills": []
+  "excluded_skills": [
+    "alpha-skill"
+  ]
 }
 ```
 > `skills list`
@@ -799,7 +784,7 @@ Disable the group:
 > `skills disable group group-1`
 ```
 ✅ Group "group-1" disabled
-→ Applying sparse checkout (4 skill(s)) ...
+→ Applying sparse checkout (3 skill(s)) ...
   ✓ Sparse checkout applied
 ```
 > `cat skills.json`
@@ -808,11 +793,12 @@ Disable the group:
   "repo_url": "../project-repo",
   "groups": [],
   "extra_skills": [
-    "alpha-skill",
     "beta-skill",
     "gamma-skill"
   ],
-  "excluded_skills": []
+  "excluded_skills": [
+    "alpha-skill"
+  ]
 }
 ```
 > `skills list`
@@ -862,23 +848,17 @@ Make a change in alpha-skill before push:
 
 > `skills enable alpha-skill`
 ```
-Skill "alpha-skill" is already enabled
+✅ Skill "alpha-skill" re-enabled (removed from exclusion list)
+→ Applying sparse checkout (3 skill(s)) ...
+  ✓ Sparse checkout applied
 ```
 > `echo "## Updated content for smoke test" >> instructions/alpha-skill/SKILL.md`
 ```
+/app/test/run-tests.sh: line 67: instructions/alpha-skill/SKILL.md: No such file or directory
 ```
 > `cat instructions/alpha-skill/SKILL.md`
 ```
-# Skill: alpha-skill
-
-## Purpose
-
-_Describe what this skill teaches or enables._
-
-## Instructions
-
-_Write the detailed instructions for the AI agent here._
-## Updated content for smoke test
+cat: instructions/alpha-skill/SKILL.md: No such file or directory
 ```
 > `skills push alpha-skill`
 ```
@@ -886,16 +866,10 @@ _Write the detailed instructions for the AI agent here._
 Switched to a new branch 'feature/alpha-skill-update'
   ✓ Branch created
 → Staging and committing changes in alpha-skill/ ...
-  ✓ Changes committed
-→ Pushing branch feature/alpha-skill-update ...
-To /workspace/skills-repo/../project-repo
- * [new branch]      feature/alpha-skill-update -> feature/alpha-skill-update
+fatal: pathspec 'alpha-skill/' did not match any files
+Error: commit failed: Error: git add alpha-skill/: fatal: pathspec 'alpha-skill/' did not match any files
+Tip: make sure you have changes to commit in instructions/alpha-skill/
 Switched to branch 'master'
-  ✓ Branch pushed
-
-✅ Skill "alpha-skill" pushed for review
-   Branch: feature/alpha-skill-update
-   (local repository — request a review from the skill owner)
 ```
 
 Check what happened in the project repo:
@@ -906,49 +880,32 @@ Check what happened in the project repo:
 ```
 > `git branch --list`
 ```
-  feature/alpha-skill-update
 * master
 ```
 > `git log --oneline --all`
 ```
-5f58e4b feat(alpha-skill): update skill instructions
-211f88d Initial commit
+f3d5bea Initial commit
 ```
 > `git log --oneline feature/alpha-skill-update`
 ```
-5f58e4b feat(alpha-skill): update skill instructions
-211f88d Initial commit
+fatal: ambiguous argument 'feature/alpha-skill-update': unknown revision or path not in the working tree.
+Use '--' to separate paths from revisions, like this:
+'git <command> [<revision>...] -- [<file>...]'
 ```
 
 Merge the feature branch:
 
 > `git merge feature/alpha-skill-update --no-edit`
 ```
-Updating 211f88d..5f58e4b
-Fast-forward
- alpha-skill/SKILL.md  | 10 ++++++++++
- alpha-skill/info.json |  4 ++++
- 2 files changed, 14 insertions(+)
- create mode 100644 alpha-skill/SKILL.md
- create mode 100644 alpha-skill/info.json
+merge: feature/alpha-skill-update - not something we can merge
 ```
 > `git log --oneline`
 ```
-5f58e4b feat(alpha-skill): update skill instructions
-211f88d Initial commit
+f3d5bea Initial commit
 ```
 > `cat alpha-skill/SKILL.md`
 ```
-# Skill: alpha-skill
-
-## Purpose
-
-_Describe what this skill teaches or enables._
-
-## Instructions
-
-_Write the detailed instructions for the AI agent here._
-## Updated content for smoke test
+cat: alpha-skill/SKILL.md: No such file or directory
 ```
 > `cd /workspace/skills-repo`
 ```
@@ -963,7 +920,6 @@ Pull the merged changes:
 Already on 'master'
 From /workspace/skills-repo/../project-repo
  * branch            master     -> FETCH_HEAD
-   211f88d..5f58e4b  master     -> origin/master
 ✅ Skills updated successfully
 ```
 > `skills list --verbose`
@@ -971,14 +927,11 @@ From /workspace/skills-repo/../project-repo
 Skills repository: ../project-repo
 Groups:           
 
-  ✅ alpha-skill
-     This skill provides _____. It can be used for _____. The main features include _____.
-     Owner: Your_Name@domain.com
   ✅ skills-cli
      Skills CLI reference: commands, creating skills, IDE integration (VSCode/Copilot, Cursor, Claude Code).
      Owner: your-name@example.com
 
-Active: 2  |  Total: 2
+Active: 1  |  Total: 1
 ```
 
 ## Phase 11: Second push (different skill)
@@ -1014,13 +967,12 @@ Switched to branch 'master'
 ```
 > `git branch --list`
 ```
-  feature/alpha-skill-update
   feature/beta-skill-update
 * master
 ```
 > `git merge feature/beta-skill-update --no-edit`
 ```
-Updating 5f58e4b..f4c0f48
+Updating f3d5bea..3c56628
 Fast-forward
  beta-skill/SKILL.md  | 10 ++++++++++
  beta-skill/info.json |  4 ++++
@@ -1030,9 +982,8 @@ Fast-forward
 ```
 > `git log --oneline`
 ```
-f4c0f48 feat(beta-skill): update skill instructions
-5f58e4b feat(alpha-skill): update skill instructions
-211f88d Initial commit
+3c56628 feat(beta-skill): update skill instructions
+f3d5bea Initial commit
 ```
 > `cd /workspace/skills-repo`
 ```
@@ -1045,7 +996,7 @@ f4c0f48 feat(beta-skill): update skill instructions
 Already on 'master'
 From /workspace/skills-repo/../project-repo
  * branch            master     -> FETCH_HEAD
-   5f58e4b..f4c0f48  master     -> origin/master
+   f3d5bea..3c56628  master     -> origin/master
 ✅ Skills updated successfully
 ```
 
@@ -1067,26 +1018,10 @@ Force disable — stashes changes:
 
 > `skills disable gamma-skill --force`
 ```
-error: pathspec ':(,prefix:0)gamma-skill/' did not match any file(s) known to git
-Did you forget to 'git add'?
-/usr/local/lib/node_modules/skills-cli/dist/lib/gitops.js:63
-        throw new Error(`git ${args.join(' ')}: ${msg}`);
-        ^
-
-Error: git stash push -m skills-cli: auto-stash for gamma-skill -- gamma-skill/: error: pathspec ':(,prefix:0)gamma-skill/' did not match any file(s) known to git
-Did you forget to 'git add'?
-    at run (/usr/local/lib/node_modules/skills-cli/dist/lib/gitops.js:63:15)
-    at Object.stashSkillChanges (/usr/local/lib/node_modules/skills-cli/dist/lib/gitops.js:169:5)
-    at disableSkill (/usr/local/lib/node_modules/skills-cli/dist/commands/toggle.js:180:16)
-    at runDisable (/usr/local/lib/node_modules/skills-cli/dist/commands/toggle.js:76:9)
-    at execute (/usr/local/lib/node_modules/skills-cli/dist/commands/root.js:38:37)
-    at Object.<anonymous> (/usr/local/lib/node_modules/skills-cli/dist/index.js:5:20)
-    at Module._compile (node:internal/modules/cjs/loader:1521:14)
-    at Module._extensions..js (node:internal/modules/cjs/loader:1623:10)
-    at Module.load (node:internal/modules/cjs/loader:1266:32)
-    at Module._load (node:internal/modules/cjs/loader:1091:12)
-
-Node.js v20.20.2
+  ⚠ Stashed uncommitted changes for "gamma-skill" (use `git stash list` to review)
+✅ Skill "gamma-skill" disabled
+→ Applying sparse checkout (2 skill(s)) ...
+  ✓ Sparse checkout applied
 ```
 > `cat skills.json`
 ```
@@ -1094,11 +1029,11 @@ Node.js v20.20.2
   "repo_url": "../project-repo",
   "groups": [],
   "extra_skills": [
-    "alpha-skill",
-    "beta-skill",
-    "gamma-skill"
+    "beta-skill"
   ],
-  "excluded_skills": []
+  "excluded_skills": [
+    "gamma-skill"
+  ]
 }
 ```
 
@@ -1110,11 +1045,11 @@ Node.js v20.20.2
   "repo_url": "../project-repo",
   "groups": [],
   "extra_skills": [
-    "alpha-skill",
-    "beta-skill",
-    "gamma-skill"
+    "beta-skill"
   ],
-  "excluded_skills": []
+  "excluded_skills": [
+    "gamma-skill"
+  ]
 }
 ```
 > `skills init`
@@ -1126,12 +1061,12 @@ Cloning into 'instructions'...
 done.
   ✓ Cloned
 → Resolving skills for groups:  ...
-  ✓ Resolved 4 skill(s): alpha-skill, beta-skill, gamma-skill, skills-cli
+  ✓ Resolved 2 skill(s): beta-skill, skills-cli
 → Applying sparse checkout ...
   ✓ Sparse checkout applied
 
 ✅ Skills workspace re-initialized!
-   Skills:     alpha-skill, beta-skill, gamma-skill, skills-cli
+   Skills:     beta-skill, skills-cli
 ```
 > `cat skills.json`
 ```
@@ -1139,11 +1074,11 @@ done.
   "repo_url": "../project-repo",
   "groups": [],
   "extra_skills": [
-    "alpha-skill",
-    "beta-skill",
-    "gamma-skill"
+    "beta-skill"
   ],
-  "excluded_skills": []
+  "excluded_skills": [
+    "gamma-skill"
+  ]
 }
 ```
 > `skills list`
@@ -1151,20 +1086,16 @@ done.
 Skills repository: ../project-repo
 Groups:           
 
-  ✅ alpha-skill
   ✅ beta-skill
   ✅ skills-cli
 
-Active: 3  |  Total: 3
+Active: 2  |  Total: 2
 ```
 > `skills list --verbose`
 ```
 Skills repository: ../project-repo
 Groups:           
 
-  ✅ alpha-skill
-     This skill provides _____. It can be used for _____. The main features include _____.
-     Owner: Your_Name@domain.com
   ✅ beta-skill
      This skill provides _____. It can be used for _____. The main features include _____.
      Owner: Your_Name@domain.com
@@ -1172,7 +1103,7 @@ Groups:
      Skills CLI reference: commands, creating skills, IDE integration (VSCode/Copilot, Cursor, Claude Code).
      Owner: your-name@example.com
 
-Active: 3  |  Total: 3
+Active: 2  |  Total: 2
 ```
 
 ## Phase 14: Final state
@@ -1183,22 +1114,16 @@ Active: 3  |  Total: 3
   "repo_url": "../project-repo",
   "groups": [],
   "extra_skills": [
-    "alpha-skill",
-    "beta-skill",
-    "gamma-skill"
+    "beta-skill"
   ],
-  "excluded_skills": []
+  "excluded_skills": [
+    "gamma-skill"
+  ]
 }
 ```
 > `skills list --json`
 ```
 [
-  {
-    "name": "alpha-skill",
-    "active": true,
-    "description": "This skill provides _____. It can be used for _____. The main features include _____.",
-    "owner": "Your_Name@domain.com"
-  },
   {
     "name": "beta-skill",
     "active": true,
@@ -1215,7 +1140,6 @@ Active: 3  |  Total: 3
 ```
 > `ls instructions/`
 ```
-alpha-skill
 beta-skill
 skills-cli
 ```
@@ -1232,13 +1156,11 @@ sub-group.json
 ```
 > `git log --oneline --all`
 ```
-f4c0f48 feat(beta-skill): update skill instructions
-5f58e4b feat(alpha-skill): update skill instructions
-211f88d Initial commit
+3c56628 feat(beta-skill): update skill instructions
+f3d5bea Initial commit
 ```
 > `git branch --list`
 ```
-  feature/alpha-skill-update
   feature/beta-skill-update
 * master
 ```
