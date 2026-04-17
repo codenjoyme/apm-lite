@@ -166,5 +166,5 @@ function hasUncommittedChanges(repoDir, skillName) {
     }
 }
 function stashSkillChanges(repoDir, skillName) {
-    run(repoDir, 'stash', 'push', '-m', `skills-cli: auto-stash for ${skillName}`, '--', skillName + '/');
+    run(repoDir, 'stash', 'push', '-u', '-m', `skills-cli: auto-stash for ${skillName}`, '--', skillName + '/');
 }
