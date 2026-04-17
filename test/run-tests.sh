@@ -2,14 +2,14 @@
 # ============================================
 # Skills CLI — Smoke Test Runner
 # ============================================
-# Reads commands.md, executes lines matching > `command`,
+# Re# Reads commands.md, executes lines matching > `command`,
 # inserts output as fenced code blocks, writes result
 # back to the same file.
 # ============================================
 
 set -o pipefail
 
-SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+SCRIPT_DIR="${SCRIPT_DIR:-$(cd "$(dirname "$0")" && pwd)}"
 FILE="${SCRIPT_DIR}/commands.md"
 
 CURRENT_DIR="/workspace"
@@ -65,8 +65,8 @@ while IFS= read -r line || [[ -n "$line" ]]; do
 
         # Execute command
         OUTPUT=$(cd "$CURRENT_DIR" 2>/dev/null && eval "$CMD" 2>&1) || true
-        # Escape triple backticks in output so they don't break markdown fencing
-        OUTPUT="${OUTPUT//\`\`\`/\'\'\'}"
+        # Replace all backticks with single quotes so they don't break fenced blocks
+        OUTPUT="${OUTPUT//\`/\'}"
 
         echo '```' >> "$TMPFILE"
         if [[ -n "$OUTPUT" ]]; then

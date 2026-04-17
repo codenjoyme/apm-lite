@@ -19,4 +19,4 @@ COPY test/ /app/test/
 RUN mkdir -p /workspace
 
 # Mount test/ as a volume — commands.md is read and rewritten in-place
-ENTRYPOINT ["bash", "/app/test/run-tests.sh"]
+ENTRYPOINT ["bash", "-c", "sed 's/\\r$//' /app/test/run-tests.sh > /tmp/run.sh && SCRIPT_DIR=/app/test bash /tmp/run.sh"]
