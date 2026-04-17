@@ -60,8 +60,19 @@ export function createBranch(repoDir: string, branchName: string): void {
 
 export function stageAndCommit(repoDir: string, skillName: string): void {
   const skillPath = skillName.replace(/\\/g, '/') + '/';
+  addToSparseCheckout(repoDir, skillName);
   run(repoDir, 'add', skillPath);
   run(repoDir, 'commit', '-m', `feat(${skillName}): update skill instructions`);
+}
+
+export function addToSparseCheckout(repoDir: string, skillName: string): void {
+  const current = run(repoDir, 'sparse-checkout', 'list')
+    .split('\n')
+    .map(l => l.trim())
+    .filter(l => l.length > 0);
+  if (!current.includes(skillName)) {
+    run(repoDir, 'sparse-checkout', 'add', skillName);
+  }
 }
 
 export function push(repoDir: string, branchName: string): void {
