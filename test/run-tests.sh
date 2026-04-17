@@ -17,7 +17,7 @@ LOG_FILE="${SCRIPT_DIR}/test-log.txt"
 : "${LOG_FILE:=${SCRIPT_DIR}/test-log.txt}"
 
 # Current working directory tracker
-CURRENT_DIR="/workspace/skills-repo"
+CURRENT_DIR="/workspace"
 
 # ---- helpers ----
 separator() {
