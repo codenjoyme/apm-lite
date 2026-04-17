@@ -55,7 +55,13 @@ export function listAllSkills(repoDir: string): string[] {
 }
 
 export function createBranch(repoDir: string, branchName: string): void {
-  run(repoDir, 'checkout', '-b', branchName);
+  try {
+    run(repoDir, 'checkout', '-b', branchName);
+  } catch {
+    // Branch already exists — delete it and recreate
+    run(repoDir, 'branch', '-D', branchName);
+    run(repoDir, 'checkout', '-b', branchName);
+  }
 }
 
 export function stageAndCommit(repoDir: string, skillName: string): void {
