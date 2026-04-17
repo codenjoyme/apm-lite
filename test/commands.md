@@ -5,7 +5,7 @@
 > `npm uninstall -g skills-cli`
 ```
 
-up to date in 482ms
+up to date in 416ms
 ```
 > `rm -rf /workspace/skills-repo`
 ```
@@ -16,7 +16,7 @@ up to date in 482ms
 > `npm install -g --install-links /app`
 ```
 
-added 1 package in 426ms
+added 1 package in 467ms
 ```
 > `command -v skills`
 ```
@@ -370,7 +370,7 @@ Initialized empty Git repository in /workspace/project-repo/.git/
 ```
 > `git commit -m "Initial commit"`
 ```
-[master (root-commit) f3d5bea] Initial commit
+[master (root-commit) aec3dba] Initial commit
  6 files changed, 21 insertions(+)
  create mode 100644 .gitignore
  create mode 100644 .manifest/_global.json
@@ -381,7 +381,7 @@ Initialized empty Git repository in /workspace/project-repo/.git/
 ```
 > `git log --oneline`
 ```
-f3d5bea Initial commit
+aec3dba Initial commit
 ```
 > `git branch --list`
 ```
@@ -518,7 +518,9 @@ Active: 1  |  Total: 1
 ]
 ```
 
-## Phase 6: Create skills
+## Phase 6: Create skills, push to repo
+
+Create alpha-skill, check files, push and merge into project-repo:
 
 > `skills create alpha-skill`
 ```
@@ -552,6 +554,52 @@ _Write the detailed instructions for the AI agent here._
   "owner": "Your_Name@domain.com"
 }
 ```
+> `skills push alpha-skill`
+```
+→ Creating branch feature/alpha-skill-update ...
+Switched to a new branch 'feature/alpha-skill-update'
+  ✓ Branch created
+→ Staging and committing changes in alpha-skill/ ...
+  ✓ Changes committed
+→ Pushing branch feature/alpha-skill-update ...
+To /workspace/skills-repo/../project-repo
+ * [new branch]      feature/alpha-skill-update -> feature/alpha-skill-update
+Switched to branch 'master'
+  ✓ Branch pushed
+
+✅ Skill "alpha-skill" pushed for review
+   Branch: feature/alpha-skill-update
+   (local repository — request a review from the skill owner)
+```
+> `cd /workspace/project-repo`
+```
+/workspace/project-repo
+```
+> `git merge feature/alpha-skill-update --no-edit`
+```
+Updating aec3dba..d9c5a52
+Fast-forward
+ alpha-skill/SKILL.md  | 9 +++++++++
+ alpha-skill/info.json | 4 ++++
+ 2 files changed, 13 insertions(+)
+ create mode 100644 alpha-skill/SKILL.md
+ create mode 100644 alpha-skill/info.json
+```
+> `cd /workspace/skills-repo`
+```
+/workspace/skills-repo
+```
+> `skills pull`
+```
+→ Pulling latest skills ...
+Already on 'master'
+From /workspace/skills-repo/../project-repo
+ * branch            master     -> FETCH_HEAD
+   aec3dba..d9c5a52  master     -> origin/master
+✅ Skills updated successfully
+```
+
+Create beta-skill, push and merge:
 
 > `skills create beta-skill`
 ```
@@ -566,6 +614,52 @@ Edit SKILL.md with your instructions, then use `skills push` to propose it.
 SKILL.md
 info.json
 ```
+> `skills push beta-skill`
+```
+→ Creating branch feature/beta-skill-update ...
+Switched to a new branch 'feature/beta-skill-update'
+  ✓ Branch created
+→ Staging and committing changes in beta-skill/ ...
+  ✓ Changes committed
+→ Pushing branch feature/beta-skill-update ...
+To /workspace/skills-repo/../project-repo
+ * [new branch]      feature/beta-skill-update -> feature/beta-skill-update
+Switched to branch 'master'
+  ✓ Branch pushed
+
+✅ Skill "beta-skill" pushed for review
+   Branch: feature/beta-skill-update
+   (local repository — request a review from the skill owner)
+```
+> `cd /workspace/project-repo`
+```
+/workspace/project-repo
+```
+> `git merge feature/beta-skill-update --no-edit`
+```
+Updating d9c5a52..fbadcee
+Fast-forward
+ beta-skill/SKILL.md  | 9 +++++++++
+ beta-skill/info.json | 4 ++++
+ 2 files changed, 13 insertions(+)
+ create mode 100644 beta-skill/SKILL.md
+ create mode 100644 beta-skill/info.json
+```
+> `cd /workspace/skills-repo`
+```
+/workspace/skills-repo
+```
+> `skills pull`
+```
+→ Pulling latest skills ...
+Already on 'master'
+From /workspace/skills-repo/../project-repo
+ * branch            master     -> FETCH_HEAD
+   d9c5a52..fbadcee  master     -> origin/master
+✅ Skills updated successfully
+```
+
+Create gamma-skill, push and merge:
 
 > `skills create gamma-skill`
 ```
@@ -575,21 +669,86 @@ info.json
 
 Edit SKILL.md with your instructions, then use `skills push` to propose it.
 ```
+> `skills push gamma-skill`
+```
+→ Creating branch feature/gamma-skill-update ...
+Switched to a new branch 'feature/gamma-skill-update'
+  ✓ Branch created
+→ Staging and committing changes in gamma-skill/ ...
+  ✓ Changes committed
+→ Pushing branch feature/gamma-skill-update ...
+To /workspace/skills-repo/../project-repo
+ * [new branch]      feature/gamma-skill-update -> feature/gamma-skill-update
+Switched to branch 'master'
+  ✓ Branch pushed
 
-Check all three created:
+✅ Skill "gamma-skill" pushed for review
+   Branch: feature/gamma-skill-update
+   (local repository — request a review from the skill owner)
+```
+> `cd /workspace/project-repo`
+```
+/workspace/project-repo
+```
+> `git merge feature/gamma-skill-update --no-edit`
+```
+Updating fbadcee..8d4b2c6
+Fast-forward
+ gamma-skill/SKILL.md  | 9 +++++++++
+ gamma-skill/info.json | 4 ++++
+ 2 files changed, 13 insertions(+)
+ create mode 100644 gamma-skill/SKILL.md
+ create mode 100644 gamma-skill/info.json
+```
+> `cd /workspace/skills-repo`
+```
+/workspace/skills-repo
+```
+> `skills pull`
+```
+→ Pulling latest skills ...
+Already on 'master'
+From /workspace/skills-repo/../project-repo
+ * branch            master     -> FETCH_HEAD
+   fbadcee..8d4b2c6  master     -> origin/master
+✅ Skills updated successfully
+```
+
+All three skills now exist in project-repo:
 
 > `skills list`
 ```
 Skills repository: ../project-repo
 Groups:           group-1
 
+  ✅ alpha-skill
+  ✅ beta-skill
+  ✅ gamma-skill
   ✅ skills-cli
 
-Active: 1  |  Total: 1
+Active: 4  |  Total: 4
 ```
 > `skills list --json`
 ```
 [
+  {
+    "name": "alpha-skill",
+    "active": true,
+    "description": "This skill provides _____. It can be used for _____. The main features include _____.",
+    "owner": "Your_Name@domain.com"
+  },
+  {
+    "name": "beta-skill",
+    "active": true,
+    "description": "This skill provides _____. It can be used for _____. The main features include _____.",
+    "owner": "Your_Name@domain.com"
+  },
+  {
+    "name": "gamma-skill",
+    "active": true,
+    "description": "This skill provides _____. It can be used for _____. The main features include _____.",
+    "owner": "Your_Name@domain.com"
+  },
   {
     "name": "skills-cli",
     "active": true,
@@ -597,6 +756,21 @@ Active: 1  |  Total: 1
     "owner": "your-name@example.com"
   }
 ]
+```
+> `cat skills.json`
+```
+{
+  "repo_url": "../project-repo",
+  "groups": [
+    "group-1"
+  ],
+  "extra_skills": [
+    "alpha-skill",
+    "beta-skill",
+    "gamma-skill"
+  ],
+  "excluded_skills": []
+}
 ```
 
 Error case — create duplicate skill:
@@ -616,12 +790,8 @@ Usage: skills create <skill-name>
 
 ## Phase 7: Enable/disable individual skills
 
-Enable alpha-skill (it was auto-added by create, so this tests idempotency):
+Skills were auto-added to extra_skills by create. Verify state:
 
-> `skills enable alpha-skill`
-```
-Skill "alpha-skill" is already enabled
-```
 > `cat skills.json`
 ```
 {
@@ -636,23 +806,15 @@ Skill "alpha-skill" is already enabled
   ],
   "excluded_skills": []
 }
-```
-> `skills list`
-```
-Skills repository: ../project-repo
-Groups:           group-1
-
-  ✅ skills-cli
-
-Active: 1  |  Total: 1
 ```
 
 Disable alpha-skill:
 
 > `skills disable alpha-skill`
 ```
-Error: cannot disable skill "alpha-skill" - uncommitted local changes detected
-Commit or discard your changes first, or use --force to override.
+✅ Skill "alpha-skill" disabled
+→ Applying sparse checkout (3 skill(s)) ...
+  ✓ Sparse checkout applied
 ```
 > `cat skills.json`
 ```
@@ -662,11 +824,12 @@ Commit or discard your changes first, or use --force to override.
     "group-1"
   ],
   "extra_skills": [
-    "alpha-skill",
     "beta-skill",
     "gamma-skill"
   ],
-  "excluded_skills": []
+  "excluded_skills": [
+    "alpha-skill"
+  ]
 }
 ```
 > `skills list`
@@ -674,16 +837,21 @@ Commit or discard your changes first, or use --force to override.
 Skills repository: ../project-repo
 Groups:           group-1
 
+  ○  alpha-skill
+  ✅ beta-skill
+  ✅ gamma-skill
   ✅ skills-cli
 
-Active: 1  |  Total: 1
+Active: 3  |  Total: 4
 ```
 
 Re-enable alpha-skill (remove from excluded):
 
 > `skills enable alpha-skill`
 ```
-Skill "alpha-skill" is already enabled
+✅ Skill "alpha-skill" re-enabled (removed from exclusion list)
+→ Applying sparse checkout (3 skill(s)) ...
+  ✓ Sparse checkout applied
 ```
 > `cat skills.json`
 ```
@@ -693,7 +861,6 @@ Skill "alpha-skill" is already enabled
     "group-1"
   ],
   "extra_skills": [
-    "alpha-skill",
     "beta-skill",
     "gamma-skill"
   ],
@@ -705,24 +872,90 @@ Skill "alpha-skill" is already enabled
 Skills repository: ../project-repo
 Groups:           group-1
 
+  ○  alpha-skill
+  ✅ beta-skill
+  ✅ gamma-skill
   ✅ skills-cli
 
-Active: 1  |  Total: 1
+Active: 3  |  Total: 4
 ```
 
-Disable again, then try double disable:
+Disable beta-skill:
 
-> `skills disable alpha-skill --force`
+> `skills disable beta-skill`
 ```
-  ⚠ Stashed uncommitted changes for "alpha-skill" (use `git stash list` to review)
-✅ Skill "alpha-skill" disabled
+✅ Skill "beta-skill" disabled
+→ Applying sparse checkout (2 skill(s)) ...
+  ✓ Sparse checkout applied
+```
+> `cat skills.json`
+```
+{
+  "repo_url": "../project-repo",
+  "groups": [
+    "group-1"
+  ],
+  "extra_skills": [
+    "gamma-skill"
+  ],
+  "excluded_skills": [
+    "beta-skill"
+  ]
+}
+```
+
+Re-enable beta-skill:
+
+> `skills enable beta-skill`
+```
+✅ Skill "beta-skill" re-enabled (removed from exclusion list)
+→ Applying sparse checkout (2 skill(s)) ...
+  ✓ Sparse checkout applied
+```
+> `cat skills.json`
+```
+{
+  "repo_url": "../project-repo",
+  "groups": [
+    "group-1"
+  ],
+  "extra_skills": [
+    "gamma-skill"
+  ],
+  "excluded_skills": []
+}
+```
+
+Error case — enable already enabled skill:
+
+> `skills enable alpha-skill`
+```
+✅ Skill "alpha-skill" enabled
 → Applying sparse checkout (3 skill(s)) ...
+  ✓ Sparse checkout applied
+```
+
+Error case — disable then double-disable:
+
+> `skills disable alpha-skill`
+```
+✅ Skill "alpha-skill" disabled
+→ Applying sparse checkout (2 skill(s)) ...
   ✓ Sparse checkout applied
 ```
 > `skills disable alpha-skill`
 ```
 Skill "alpha-skill" is already disabled
 ```
+
+Re-enable for later phases:
+
+> `skills enable alpha-skill`
+```
+✅ Skill "alpha-skill" re-enabled (removed from exclusion list)
+→ Applying sparse checkout (2 skill(s)) ...
+  ✓ Sparse checkout applied
+```
 > `cat skills.json`
 ```
 {
@@ -731,20 +964,69 @@ Skill "alpha-skill" is already disabled
     "group-1"
   ],
   "extra_skills": [
-    "beta-skill",
     "gamma-skill"
   ],
-  "excluded_skills": [
-    "alpha-skill"
-  ]
+  "excluded_skills": []
 }
 ```
 
 ## Phase 8: Enable/disable groups
 
+Current state:
+
+> `cat skills.json`
+```
+{
+  "repo_url": "../project-repo",
+  "groups": [
+    "group-1"
+  ],
+  "extra_skills": [
+    "gamma-skill"
+  ],
+  "excluded_skills": []
+}
+```
+
+Disable group-1 (was set during init):
+
+> `skills disable group group-1`
+```
+✅ Group "group-1" disabled
+→ Applying sparse checkout (2 skill(s)) ...
+  ✓ Sparse checkout applied
+```
+> `cat skills.json`
+```
+{
+  "repo_url": "../project-repo",
+  "groups": [],
+  "extra_skills": [
+    "gamma-skill"
+  ],
+  "excluded_skills": []
+}
+```
+> `skills list`
+```
+Skills repository: ../project-repo
+Groups:           
+
+  ○  alpha-skill
+  ○  beta-skill
+  ✅ gamma-skill
+  ✅ skills-cli
+
+Active: 2  |  Total: 4
+```
+
+Re-enable group-1:
+
 > `skills enable group group-1`
 ```
-Group "group-1" is already enabled
+✅ Group "group-1" enabled
+→ Applying sparse checkout (2 skill(s)) ...
+  ✓ Sparse checkout applied
 ```
 > `cat skills.json`
 ```
@@ -754,12 +1036,9 @@ Group "group-1" is already enabled
     "group-1"
   ],
   "extra_skills": [
-    "beta-skill",
     "gamma-skill"
   ],
-  "excluded_skills": [
-    "alpha-skill"
-  ]
+  "excluded_skills": []
 }
 ```
 > `skills list`
@@ -767,9 +1046,12 @@ Group "group-1" is already enabled
 Skills repository: ../project-repo
 Groups:           group-1
 
+  ○  alpha-skill
+  ○  beta-skill
+  ✅ gamma-skill
   ✅ skills-cli
 
-Active: 1  |  Total: 1
+Active: 2  |  Total: 4
 ```
 
 Error case — enable already enabled group:
@@ -779,40 +1061,14 @@ Error case — enable already enabled group:
 Group "group-1" is already enabled
 ```
 
-Disable the group:
+Disable and try double-disable:
 
 > `skills disable group group-1`
 ```
 ✅ Group "group-1" disabled
-→ Applying sparse checkout (3 skill(s)) ...
+→ Applying sparse checkout (2 skill(s)) ...
   ✓ Sparse checkout applied
 ```
-> `cat skills.json`
-```
-{
-  "repo_url": "../project-repo",
-  "groups": [],
-  "extra_skills": [
-    "beta-skill",
-    "gamma-skill"
-  ],
-  "excluded_skills": [
-    "alpha-skill"
-  ]
-}
-```
-> `skills list`
-```
-Skills repository: ../project-repo
-Groups:           
-
-  ✅ skills-cli
-
-Active: 1  |  Total: 1
-```
-
-Error case — disable group not enabled:
-
 > `skills disable group group-1`
 ```
 Group "group-1" is not currently enabled
@@ -829,6 +1085,15 @@ Usage: skills enable group <group-name>
 ```
 Error: group name is required
 Usage: skills disable group <group-name>
+```
+
+Re-enable for later phases:
+
+> `skills enable group group-1`
+```
+✅ Group "group-1" enabled
+→ Applying sparse checkout (2 skill(s)) ...
+  ✓ Sparse checkout applied
 ```
 
 ## Phase 9: Pull
@@ -848,28 +1113,43 @@ Make a change in alpha-skill before push:
 
 > `skills enable alpha-skill`
 ```
-✅ Skill "alpha-skill" re-enabled (removed from exclusion list)
+✅ Skill "alpha-skill" enabled
 → Applying sparse checkout (3 skill(s)) ...
   ✓ Sparse checkout applied
 ```
 > `echo "## Updated content for smoke test" >> instructions/alpha-skill/SKILL.md`
 ```
-/app/test/run-tests.sh: line 67: instructions/alpha-skill/SKILL.md: No such file or directory
 ```
 > `cat instructions/alpha-skill/SKILL.md`
 ```
-cat: instructions/alpha-skill/SKILL.md: No such file or directory
+# Skill: alpha-skill
+
+## Purpose
+
+_Describe what this skill teaches or enables._
+
+## Instructions
+
+_Write the detailed instructions for the AI agent here._
+## Updated content for smoke test
 ```
 > `skills push alpha-skill`
 ```
 → Creating branch feature/alpha-skill-update ...
+fatal: a branch named 'feature/alpha-skill-update' already exists
 Switched to a new branch 'feature/alpha-skill-update'
   ✓ Branch created
 → Staging and committing changes in alpha-skill/ ...
-fatal: pathspec 'alpha-skill/' did not match any files
-Error: commit failed: Error: git add alpha-skill/: fatal: pathspec 'alpha-skill/' did not match any files
-Tip: make sure you have changes to commit in instructions/alpha-skill/
+  ✓ Changes committed
+→ Pushing branch feature/alpha-skill-update ...
+To /workspace/skills-repo/../project-repo
+   d9c5a52..694a4e7  feature/alpha-skill-update -> feature/alpha-skill-update
 Switched to branch 'master'
+  ✓ Branch pushed
+
+✅ Skill "alpha-skill" pushed for review
+   Branch: feature/alpha-skill-update
+   (local repository — request a review from the skill owner)
 ```
 
 Check what happened in the project repo:
@@ -880,32 +1160,57 @@ Check what happened in the project repo:
 ```
 > `git branch --list`
 ```
+  feature/alpha-skill-update
+  feature/beta-skill-update
+  feature/gamma-skill-update
 * master
 ```
 > `git log --oneline --all`
 ```
-f3d5bea Initial commit
+694a4e7 feat(alpha-skill): update skill instructions
+fbadcee feat(beta-skill): update skill instructions
+8d4b2c6 feat(gamma-skill): update skill instructions
+d9c5a52 feat(alpha-skill): update skill instructions
+aec3dba Initial commit
 ```
 > `git log --oneline feature/alpha-skill-update`
 ```
-fatal: ambiguous argument 'feature/alpha-skill-update': unknown revision or path not in the working tree.
-Use '--' to separate paths from revisions, like this:
-'git <command> [<revision>...] -- [<file>...]'
+694a4e7 feat(alpha-skill): update skill instructions
+8d4b2c6 feat(gamma-skill): update skill instructions
+fbadcee feat(beta-skill): update skill instructions
+d9c5a52 feat(alpha-skill): update skill instructions
+aec3dba Initial commit
 ```
 
 Merge the feature branch:
 
 > `git merge feature/alpha-skill-update --no-edit`
 ```
-merge: feature/alpha-skill-update - not something we can merge
+Updating 8d4b2c6..694a4e7
+Fast-forward
+ alpha-skill/SKILL.md | 1 +
+ 1 file changed, 1 insertion(+)
 ```
 > `git log --oneline`
 ```
-f3d5bea Initial commit
+694a4e7 feat(alpha-skill): update skill instructions
+8d4b2c6 feat(gamma-skill): update skill instructions
+fbadcee feat(beta-skill): update skill instructions
+d9c5a52 feat(alpha-skill): update skill instructions
+aec3dba Initial commit
 ```
 > `cat alpha-skill/SKILL.md`
 ```
-cat: alpha-skill/SKILL.md: No such file or directory
+# Skill: alpha-skill
+
+## Purpose
+
+_Describe what this skill teaches or enables._
+
+## Instructions
+
+_Write the detailed instructions for the AI agent here._
+## Updated content for smoke test
 ```
 > `cd /workspace/skills-repo`
 ```
@@ -920,25 +1225,37 @@ Pull the merged changes:
 Already on 'master'
 From /workspace/skills-repo/../project-repo
  * branch            master     -> FETCH_HEAD
+   8d4b2c6..694a4e7  master     -> origin/master
 ✅ Skills updated successfully
 ```
 > `skills list --verbose`
 ```
 Skills repository: ../project-repo
-Groups:           
+Groups:           group-1
 
+  ✅ alpha-skill
+     This skill provides _____. It can be used for _____. The main features include _____.
+     Owner: Your_Name@domain.com
+  ○  beta-skill
+     This skill provides _____. It can be used for _____. The main features include _____.
+     Owner: Your_Name@domain.com
+  ✅ gamma-skill
+     This skill provides _____. It can be used for _____. The main features include _____.
+     Owner: Your_Name@domain.com
   ✅ skills-cli
      Skills CLI reference: commands, creating skills, IDE integration (VSCode/Copilot, Cursor, Claude Code).
      Owner: your-name@example.com
 
-Active: 1  |  Total: 1
+Active: 3  |  Total: 4
 ```
 
 ## Phase 11: Second push (different skill)
 
 > `skills enable beta-skill`
 ```
-Skill "beta-skill" is already enabled
+✅ Skill "beta-skill" enabled
+→ Applying sparse checkout (4 skill(s)) ...
+  ✓ Sparse checkout applied
 ```
 > `echo "## Beta skill content" >> instructions/beta-skill/SKILL.md`
 ```
@@ -946,13 +1263,14 @@ Skill "beta-skill" is already enabled
 > `skills push beta-skill`
 ```
 → Creating branch feature/beta-skill-update ...
+fatal: a branch named 'feature/beta-skill-update' already exists
 Switched to a new branch 'feature/beta-skill-update'
   ✓ Branch created
 → Staging and committing changes in beta-skill/ ...
   ✓ Changes committed
 → Pushing branch feature/beta-skill-update ...
 To /workspace/skills-repo/../project-repo
- * [new branch]      feature/beta-skill-update -> feature/beta-skill-update
+   fbadcee..8b9e316  feature/beta-skill-update -> feature/beta-skill-update
 Switched to branch 'master'
   ✓ Branch pushed
 
@@ -967,23 +1285,26 @@ Switched to branch 'master'
 ```
 > `git branch --list`
 ```
+  feature/alpha-skill-update
   feature/beta-skill-update
+  feature/gamma-skill-update
 * master
 ```
 > `git merge feature/beta-skill-update --no-edit`
 ```
-Updating f3d5bea..3c56628
+Updating 694a4e7..8b9e316
 Fast-forward
- beta-skill/SKILL.md  | 10 ++++++++++
- beta-skill/info.json |  4 ++++
- 2 files changed, 14 insertions(+)
- create mode 100644 beta-skill/SKILL.md
- create mode 100644 beta-skill/info.json
+ beta-skill/SKILL.md | 1 +
+ 1 file changed, 1 insertion(+)
 ```
 > `git log --oneline`
 ```
-3c56628 feat(beta-skill): update skill instructions
-f3d5bea Initial commit
+8b9e316 feat(beta-skill): update skill instructions
+694a4e7 feat(alpha-skill): update skill instructions
+8d4b2c6 feat(gamma-skill): update skill instructions
+fbadcee feat(beta-skill): update skill instructions
+d9c5a52 feat(alpha-skill): update skill instructions
+aec3dba Initial commit
 ```
 > `cd /workspace/skills-repo`
 ```
@@ -996,7 +1317,7 @@ f3d5bea Initial commit
 Already on 'master'
 From /workspace/skills-repo/../project-repo
  * branch            master     -> FETCH_HEAD
-   f3d5bea..3c56628  master     -> origin/master
+   694a4e7..8b9e316  master     -> origin/master
 ✅ Skills updated successfully
 ```
 
@@ -1020,15 +1341,18 @@ Force disable — stashes changes:
 ```
   ⚠ Stashed uncommitted changes for "gamma-skill" (use `git stash list` to review)
 ✅ Skill "gamma-skill" disabled
-→ Applying sparse checkout (2 skill(s)) ...
+→ Applying sparse checkout (3 skill(s)) ...
   ✓ Sparse checkout applied
 ```
 > `cat skills.json`
 ```
 {
   "repo_url": "../project-repo",
-  "groups": [],
+  "groups": [
+    "group-1"
+  ],
   "extra_skills": [
+    "alpha-skill",
     "beta-skill"
   ],
   "excluded_skills": [
@@ -1043,8 +1367,11 @@ Force disable — stashes changes:
 ```
 {
   "repo_url": "../project-repo",
-  "groups": [],
+  "groups": [
+    "group-1"
+  ],
   "extra_skills": [
+    "alpha-skill",
     "beta-skill"
   ],
   "excluded_skills": [
@@ -1060,20 +1387,23 @@ Force disable — stashes changes:
 Cloning into 'instructions'...
 done.
   ✓ Cloned
-→ Resolving skills for groups:  ...
-  ✓ Resolved 2 skill(s): beta-skill, skills-cli
+→ Resolving skills for groups: group-1 ...
+  ✓ Resolved 3 skill(s): alpha-skill, beta-skill, skills-cli
 → Applying sparse checkout ...
   ✓ Sparse checkout applied
 
 ✅ Skills workspace re-initialized!
-   Skills:     beta-skill, skills-cli
+   Skills:     alpha-skill, beta-skill, skills-cli
 ```
 > `cat skills.json`
 ```
 {
   "repo_url": "../project-repo",
-  "groups": [],
+  "groups": [
+    "group-1"
+  ],
   "extra_skills": [
+    "alpha-skill",
     "beta-skill"
   ],
   "excluded_skills": [
@@ -1084,26 +1414,34 @@ done.
 > `skills list`
 ```
 Skills repository: ../project-repo
-Groups:           
+Groups:           group-1
 
+  ✅ alpha-skill
   ✅ beta-skill
+  ○  gamma-skill
   ✅ skills-cli
 
-Active: 2  |  Total: 2
+Active: 3  |  Total: 4
 ```
 > `skills list --verbose`
 ```
 Skills repository: ../project-repo
-Groups:           
+Groups:           group-1
 
+  ✅ alpha-skill
+     This skill provides _____. It can be used for _____. The main features include _____.
+     Owner: Your_Name@domain.com
   ✅ beta-skill
+     This skill provides _____. It can be used for _____. The main features include _____.
+     Owner: Your_Name@domain.com
+  ○  gamma-skill
      This skill provides _____. It can be used for _____. The main features include _____.
      Owner: Your_Name@domain.com
   ✅ skills-cli
      Skills CLI reference: commands, creating skills, IDE integration (VSCode/Copilot, Cursor, Claude Code).
      Owner: your-name@example.com
 
-Active: 2  |  Total: 2
+Active: 3  |  Total: 4
 ```
 
 ## Phase 14: Final state
@@ -1112,8 +1450,11 @@ Active: 2  |  Total: 2
 ```
 {
   "repo_url": "../project-repo",
-  "groups": [],
+  "groups": [
+    "group-1"
+  ],
   "extra_skills": [
+    "alpha-skill",
     "beta-skill"
   ],
   "excluded_skills": [
@@ -1125,8 +1466,20 @@ Active: 2  |  Total: 2
 ```
 [
   {
+    "name": "alpha-skill",
+    "active": true,
+    "description": "This skill provides _____. It can be used for _____. The main features include _____.",
+    "owner": "Your_Name@domain.com"
+  },
+  {
     "name": "beta-skill",
     "active": true,
+    "description": "This skill provides _____. It can be used for _____. The main features include _____.",
+    "owner": "Your_Name@domain.com"
+  },
+  {
+    "name": "gamma-skill",
+    "active": false,
     "description": "This skill provides _____. It can be used for _____. The main features include _____.",
     "owner": "Your_Name@domain.com"
   },
@@ -1140,6 +1493,7 @@ Active: 2  |  Total: 2
 ```
 > `ls instructions/`
 ```
+alpha-skill
 beta-skill
 skills-cli
 ```
@@ -1156,12 +1510,18 @@ sub-group.json
 ```
 > `git log --oneline --all`
 ```
-3c56628 feat(beta-skill): update skill instructions
-f3d5bea Initial commit
+8b9e316 feat(beta-skill): update skill instructions
+694a4e7 feat(alpha-skill): update skill instructions
+8d4b2c6 feat(gamma-skill): update skill instructions
+fbadcee feat(beta-skill): update skill instructions
+d9c5a52 feat(alpha-skill): update skill instructions
+aec3dba Initial commit
 ```
 > `git branch --list`
 ```
+  feature/alpha-skill-update
   feature/beta-skill-update
+  feature/gamma-skill-update
 * master
 ```
 > `cd /workspace/skills-repo`
