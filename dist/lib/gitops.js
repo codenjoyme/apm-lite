@@ -118,11 +118,20 @@ function getRemoteURL(repoDir) {
     return run(repoDir, 'remote', 'get-url', 'origin');
 }
 function loadSkillInfo(repoDir, skillName) {
+    // Try local filesystem first (works for active/checked-out skills)
     const infoPath = path.join(repoDir, skillName, 'info.json');
-    if (!fs.existsSync(infoPath))
-        return null;
+    if (fs.existsSync(infoPath)) {
+        try {
+            const data = fs.readFileSync(infoPath, 'utf8');
+            return JSON.parse(data);
+        }
+        catch {
+            // fall through to git
+        }
+    }
+    // Fall back to reading from git object database (works for non-checked-out skills)
     try {
-        const data = fs.readFileSync(infoPath, 'utf8');
+        const data = run(repoDir, 'show', `HEAD:${skillName}/info.json`);
         return JSON.parse(data);
     }
     catch {
