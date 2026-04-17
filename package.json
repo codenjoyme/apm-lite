@@ -7,7 +7,7 @@
     "skills": "./dist/index.js"
   },
   "scripts": {
-    "build": "npx tsc",
+    "build": "npx -p typescript tsc",
     "prepare": "npm run build",
     "dev": "ts-node src/index.ts"
   },
