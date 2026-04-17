@@ -65,6 +65,8 @@ while IFS= read -r line || [[ -n "$line" ]]; do
 
         # Execute command
         OUTPUT=$(cd "$CURRENT_DIR" 2>/dev/null && eval "$CMD" 2>&1) || true
+        # Escape triple backticks in output so they don't break markdown fencing
+        OUTPUT="${OUTPUT//\`\`\`/\'\'\'}"
 
         echo '```' >> "$TMPFILE"
         if [[ -n "$OUTPUT" ]]; then

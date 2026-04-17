@@ -8,7 +8,7 @@ RUN git config --global user.email "smoke-test@test.local" \
 
 # Copy project source
 WORKDIR /app
-COPY package.json tsconfig.json ./
+COPY package.json tsconfig.json SKILL-CLI.md ./
 COPY src/ src/
 RUN npm install && npm run build
 
