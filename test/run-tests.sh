@@ -2,7 +2,7 @@
 # ============================================
 # Skills CLI — Smoke Test Runner
 # ============================================
-# Re# Reads commands.md, executes lines matching > `command`,
+# Reads commands.md, executes lines matching > `command`,
 # inserts output as fenced code blocks, writes result
 # back to the same file.
 # ============================================
